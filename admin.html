@@ -218,11 +218,11 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZnN3a3d2c2VzYnN2c3BqYnhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0Njc5MTIsImV4cCI6MjA5MDA0MzkxMn0.sR-JtpF8kcZyAVPGrTAHmOyO_Q_g-niIlu6SVZduanI';
     const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const LÖSENORD = 'tegelhatt2024';
+    const PASSWORD = 'tegelhatt2024';
 
     function login() {
       const pw = document.getElementById('pw').value;
-      if (pw === LÖSENORD) {
+      if (pw === PASSWORD) {
         document.getElementById('loginView').style.display = 'none';
         document.getElementById('adminView').style.display = 'block';
       } else {
