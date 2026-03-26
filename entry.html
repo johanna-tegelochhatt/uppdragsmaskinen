@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tegel & Hatt – Kom igång</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple: #a5a6f6;
+      --black: #111;
+      --orange: #fd804b;
+      --bg: #fafaf8;
+      --muted: #888;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--black);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 64px;
+      align-self: flex-start;
+      position: fixed;
+      top: 28px;
+      left: 40px;
+    }
+    .inner {
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .intro {
+      font-size: 1rem;
+      font-weight: 300;
+      color: #555;
+      line-height: 1.7;
+      margin-bottom: 48px;
+      max-width: 480px;
+    }
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .card {
+      display: block;
+      background: #fff;
+      border: 1px solid #e4e4e0;
+      border-radius: 8px;
+      padding: 28px 32px;
+      text-decoration: none;
+      color: var(--black);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .card:hover {
+      border-color: var(--purple);
+      box-shadow: 0 4px 24px rgba(165,166,246,0.15);
+    }
+    .card-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--purple);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .card h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .card p {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: #666;
+      line-height: 1.6;
+    }
+    .card .arrow {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .card:hover .arrow { color: var(--orange); }
+
+    @media (max-width: 600px) {
+      .logo { left: 24px; }
+      .card { padding: 22px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">Tegel & Hatt</div>
+  <div class="inner">
+    <h1>Låt oss lära känna varandra lite bättre.</h1>
+    <p class="intro">Svara på några frågor så kan vi snabbare förstå vad du behöver – och ge dig ett relevant svar tillbaka.</p>
+    <div class="cards">
+      <a class="card" href="brief.html">
+        <div class="card-label">Vi har inte pratat ännu</div>
+        <h2>Jag hörde av mig för att jag har ett projekt</h2>
+        <p>Fyll i ett kort formulär så återkommer vi med tankar kring vad som krävs och vad det kan kosta.</p>
+        <div class="arrow">Sätt igång →</div>
+      </a>
+      <a class="card" href="admin.html">
+        <div class="card-label">Vi har inlett en dialog</div>
+        <h2>Johanna skickar mig ett formulär</h2>
+        <p>Johanna har förberett några frågor baserat på vad vi redan pratat om. Frågorna är anpassade just för din situation.</p>
+        <div class="arrow">Öppna mitt formulär →</div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

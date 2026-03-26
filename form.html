@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tegel & Hatt – Dina frågor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple: #a5a6f6;
+      --black: #111;
+      --orange: #fd804b;
+      --bg: #fafaf8;
+      --muted: #888;
+    }
+    html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--black); overflow: hidden; }
+
+    .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--purple); transition: width 0.5s ease; z-index: 10; }
+    .logo { position: fixed; top: 28px; left: 40px; font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; color: var(--muted); z-index: 10; letter-spacing: 0.04em; }
+
+    .steps { display: flex; height: 100vh; transition: transform 0.55s cubic-bezier(0.77,0,0.175,1); will-change: transform; }
+    .step { min-width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px 40px 100px; }
+    .step-inner { max-width: 640px; width: 100%; }
+
+    .step-number { font-size: 0.8rem; font-weight: 500; color: var(--purple); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 24px; }
+
+    .step h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; line-height: 1.2; margin-bottom: 12px; }
+    .step .hint { font-size: 0.95rem; font-weight: 300; color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
+
+    .step textarea { width: 100%; background: transparent; border: none; border-bottom: 2px solid #ddd; padding: 12px 0; font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 300; color: var(--black); outline: none; transition: border-color 0.2s; resize: none; line-height: 1.6; min-height: 100px; }
+    .step textarea:focus { border-bottom-color: var(--purple); }
+
+    .btn-row { display: flex; align-items: center; gap: 16px; margin-top: 28px; }
+    .btn-next { background: var(--black); color: #fff; font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500; padding: 14px 28px; border: none; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+    .btn-next:hover { background: var(--orange); }
+    .btn-skip { background: none; border: none; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .btn-skip:hover { color: var(--black); }
+
+    /* Välkomst */
+    .step.welcome h2 { font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: 16px; }
+    .step.welcome .brev { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; line-height: 1.8; color: #333; margin-bottom: 36px; max-width: 520px; }
+
+    /* Tack */
+    .step.tack h2 { font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: 16px; }
+    .step.tack p { font-size: 1.05rem; font-weight: 300; color: #555; line-height: 1.7; }
+
+    /* Loading */
+    .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 16px; }
+    .spinner { width: 32px; height: 32px; border: 2px solid #ddd; border-top-color: var(--purple); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .nav { position: fixed; bottom: 36px; right: 40px; display: flex; gap: 8px; z-index: 10; }
+    .nav button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #ddd; background: #fff; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav button:hover:not(:disabled) { border-color: var(--purple); background: var(--purple); color: #fff; }
+    .nav button:disabled { opacity: 0.2; cursor: default; }
+
+    @media (max-width: 600px) { .logo { left: 24px; } .step { padding: 80px 24px 100px; } .nav { right: 24px; bottom: 28px; } }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="logo">Tegel & Hatt</div>
+
+  <div id="loadingView" class="loading">
+    <div class="spinner"></div>
+    <p style="font-size:0.9rem; color:var(--muted);">Laddar ditt formulär...</p>
+  </div>
+
+  <div id="formView" style="display:none;">
+    <div class="steps" id="steps"></div>
+    <div class="nav">
+      <button id="btnBack" onclick="goBack()" disabled>←</button>
+      <button id="btnFwd" onclick="goFwd()">→</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://ibfswkwvsesbsvspjbxo.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZnN3a3d2c2VzYnN2c3BqYnhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0Njc5MTIsImV4cCI6MjA5MDA0MzkxMn0.sR-JtpF8kcZyAVPGrTAHmOyO_Q_g-niIlu6SVZduanI';
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let current = 0;
+    let total = 0;
+    let sessionId = '';
+    let fragor = [];
+    let svar = {};
+
+    async function init() {
+      const params = new URLSearchParams(window.location.search);
+      sessionId = params.get('id');
+
+      if (!sessionId) {
+        document.getElementById('loadingView').innerHTML = '<p style="padding:40px; color:#888;">Ingen session hittades. Kontakta Tegel & Hatt.</p>';
+        return;
+      }
+
+      const { data, error } = await db
+        .from('sessions')
+        .select('*')
+        .eq('id', sessionId)
+        .single();
+
+      if (error || !data) {
+        document.getElementById('loadingView').innerHTML = '<p style="padding:40px; color:#888;">Kunde inte hitta formuläret. Kontakta Tegel & Hatt.</p>';
+        return;
+      }
+
+      fragor = data.fragor;
+      total = fragor.length + 1; // +1 för tack-sida
+
+      buildForm(data.kundnamn, fragor);
+
+      document.getElementById('loadingView').style.display = 'none';
+      document.getElementById('formView').style.display = 'block';
+      updateUI();
+    }
+
+    function buildForm(kundnamn, fragor) {
+      const steps = document.getElementById('steps');
+      const fornamn = kundnamn.split(' ')[0];
+
+      // Välkomst
+      steps.innerHTML += `
+        <div class="step welcome">
+          <div class="step-inner">
+            <h2>Hej${fornamn ? ' ' + fornamn : ''}!</h2>
+            <p class="brev">Johanna har förberett några frågor baserat på vad ni redan pratat om.<br><br>Svara precis som det kommer – det finns inga rätt eller fel svar. Det tar ungefär fem minuter.</p>
+            <div class="btn-row">
+              <button class="btn-next" onclick="goTo(1)">Sätt igång →</button>
+            </div>
+          </div>
+        </div>`;
+
+      // Frågor
+      fragor.forEach((f, i) => {
+        steps.innerHTML += `
+          <div class="step" data-index="${i+1}">
+            <div class="step-inner">
+              <div class="step-number">0${i+1}</div>
+              <h2>${f.fraga}</h2>
+              ${f.hint ? `<p class="hint">${f.hint}</p>` : ''}
+              <textarea id="svar_${f.id}" placeholder="Skriv fritt..."></textarea>
+              <div class="btn-row">
+                ${i < fragor.length - 1
+                  ? `<button class="btn-next" onclick="goTo(${i+2})">Nästa →</button>`
+                  : `<button class="btn-next" id="sendBtn" onclick="skicka()">Skicka →</button>`
+                }
+                <button class="btn-skip" onclick="goTo(${i+2})">${i < fragor.length - 1 ? 'Hoppa över' : 'Hoppa över och skicka'}</button>
+              </div>
+              <p id="status" style="margin-top:12px; font-size:0.9rem; color:var(--muted);"></p>
+            </div>
+          </div>`;
+      });
+
+      // Tack
+      steps.innerHTML += `
+        <div class="step tack">
+          <div class="step-inner">
+            <h2>Tack, det var guld!</h2>
+            <p>Johanna läser igenom svaren och hör av sig snart.<br><br>Hör gärna av dig om du har frågor: <a href="mailto:hej@tegelochhatt.se" style="color:var(--black)">hej@tegelochhatt.se</a></p>
+          </div>
+        </div>`;
+    }
+
+    function goTo(index) {
+      if (index < 0 || index > total) return;
+      current = index;
+      document.getElementById('steps').style.transform = `translateX(-${current * 100}vw)`;
+      updateUI();
+      setTimeout(() => {
+        const step = document.querySelectorAll('.step')[current];
+        const ta = step && step.querySelector('textarea');
+        if (ta) ta.focus();
+      }, 350);
+    }
+
+    function goBack() { goTo(current - 1); }
+    function goFwd() { goTo(current + 1); }
+
+    function updateUI() {
+      const isTack = current === total;
+      const progress = isTack ? 100 : (current / total) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+      document.getElementById('btnBack').disabled = current <= 0;
+      document.getElementById('btnFwd').disabled = current >= total;
+      document.querySelector('.nav').style.display = isTack ? 'none' : 'flex';
+    }
+
+    async function skicka() {
+      const btn = document.getElementById('sendBtn');
+      const status = document.getElementById('status');
+      if (btn) btn.disabled = true;
+      if (status) status.textContent = 'Skickar...';
+
+      const svar = {};
+      fragor.forEach(f => {
+        const el = document.getElementById(`svar_${f.id}`);
+        svar[f.id] = el ? el.value : '';
+      });
+
+      const { error } = await db
+        .from('sessions')
+        .update({ svar })
+        .eq('id', sessionId);
+
+      if (error) {
+        if (status) status.textContent = 'Något gick fel, försök igen.';
+        if (btn) btn.disabled = false;
+      } else {
+        goTo(total);
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        const step = document.querySelectorAll('.step')[current];
+        const btn = step && step.querySelector('.btn-next');
+        if (btn) btn.click();
+      }
+    });
+
+    init();
+  </script>
+</body>
+</html>
