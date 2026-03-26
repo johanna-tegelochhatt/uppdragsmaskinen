@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tegel & Hatt – Förbered kundformulär</title>
+  <title>Tegel & Hatt – Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -14,157 +14,52 @@
       --bg: #fafaf8;
       --muted: #888;
     }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--black);
-      min-height: 100vh;
-    }
-    .logo {
-      position: fixed;
-      top: 28px; left: 40px;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.95rem;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-    }
-    .page {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 100px 40px 80px;
-    }
-    h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.5rem;
-      font-weight: 400;
-      margin-bottom: 8px;
-    }
-    .sub {
-      font-size: 0.95rem;
-      font-weight: 300;
-      color: var(--muted);
-      margin-bottom: 48px;
-      line-height: 1.6;
-    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--black); min-height: 100vh; }
 
-    /* Login */
-    #loginView label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-    #loginView input {
-      width: 100%;
-      max-width: 320px;
-      border: none;
-      border-bottom: 2px solid #ddd;
-      background: transparent;
-      padding: 10px 0;
-      font-size: 1rem;
-      font-family: 'Inter', sans-serif;
-      outline: none;
-      margin-bottom: 24px;
-    }
-    #loginView input:focus { border-bottom-color: var(--purple); }
+    .logo { position: fixed; top: 32px; left: 48px; font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--muted); letter-spacing: 0.04em; }
 
-    /* Form */
-    .field { margin-bottom: 36px; }
-    .field label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-    .field input,
-    .field textarea {
-      width: 100%;
-      border: none;
-      border-bottom: 2px solid #ddd;
-      background: transparent;
-      padding: 10px 0;
-      font-size: 1rem;
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      outline: none;
-      transition: border-color 0.2s;
-      resize: none;
-      line-height: 1.6;
-    }
-    .field textarea { min-height: 160px; }
-    .field input:focus,
-    .field textarea:focus { border-bottom-color: var(--purple); }
+    .page { max-width: 600px; margin: 0 auto; padding: 100px 40px 80px; }
 
-    .btn {
-      background: var(--black);
-      color: #fff;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 500;
-      padding: 14px 28px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.2s;
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.75rem; font-weight: 400; margin-bottom: 8px; }
+    .sub { font-size: 0.95rem; font-weight: 300; color: var(--muted); margin-bottom: 48px; line-height: 1.6; }
+
+    .field { margin-bottom: 32px; }
+    .field label { display: block; font-size: 0.72rem; font-weight: 500; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+    .field input, .field textarea {
+      width: 100%; border: none; border-bottom: 2px solid #ddd; background: transparent;
+      padding: 10px 0; font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 300;
+      outline: none; transition: border-color 0.2s; resize: none; line-height: 1.6; color: var(--black);
     }
+    .field input:focus, .field textarea:focus { border-bottom-color: var(--purple); }
+    .field textarea { min-height: 90px; }
+
+    .fragor-block { margin-bottom: 32px; }
+    .fraga-rad { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
+    .fraga-rad textarea {
+      flex: 1; border: 1px solid #e4e4e0; border-radius: 6px; background: #fff;
+      padding: 12px 14px; font-size: 0.95rem; font-family: 'Inter', sans-serif;
+      font-weight: 300; outline: none; resize: none; line-height: 1.55; min-height: 60px;
+      transition: border-color 0.2s; color: var(--black);
+    }
+    .fraga-rad textarea:focus { border-color: var(--purple); }
+    .fraga-rad .nr { font-size: 0.75rem; color: var(--purple); font-weight: 500; padding-top: 14px; min-width: 20px; }
+    .fraga-rad .del-btn { background: none; border: none; cursor: pointer; color: #ccc; font-size: 1rem; padding-top: 12px; transition: color 0.15s; }
+    .fraga-rad .del-btn:hover { color: #c00; }
+
+    .add-btn { background: none; border: 1px dashed #ccc; border-radius: 6px; padding: 10px 16px; font-size: 0.85rem; font-family: 'Inter', sans-serif; color: var(--muted); cursor: pointer; transition: all 0.15s; width: 100%; }
+    .add-btn:hover { border-color: var(--purple); color: var(--purple); }
+
+    .btn { background: var(--black); color: #fff; font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500; padding: 14px 28px; border: none; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
     .btn:hover { background: var(--orange); }
     .btn:disabled { background: #ccc; cursor: default; }
 
-    #status {
-      margin-top: 16px;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
+    #status { margin-top: 16px; font-size: 0.9rem; color: var(--muted); }
 
-    /* Resultat */
-    #result { display: none; }
-    .fragor-lista {
-      background: #fff;
-      border: 1px solid #e4e4e0;
-      border-radius: 8px;
-      padding: 28px 32px;
-      margin: 32px 0;
-    }
-    .fraga-item {
-      padding: 16px 0;
-      border-bottom: 1px solid #f0f0ee;
-    }
-    .fraga-item:last-child { border-bottom: none; }
-    .fraga-text {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      margin-bottom: 4px;
-    }
-    .fraga-hint {
-      font-size: 0.85rem;
-      color: var(--muted);
-      font-weight: 300;
-    }
-    .link-box {
-      background: #f0f0ff;
-      border: 1px solid var(--purple);
-      border-radius: 6px;
-      padding: 16px 20px;
-      font-size: 0.9rem;
-      font-family: 'Inter', sans-serif;
-      word-break: break-all;
-      margin: 16px 0;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
+    .link-box { background: #f0f0ff; border: 1px solid var(--purple); border-radius: 6px; padding: 14px 18px; font-size: 0.9rem; word-break: break-all; margin: 12px 0; cursor: pointer; transition: background 0.15s; }
     .link-box:hover { background: #e8e8ff; }
-    .copy-hint { font-size: 0.8rem; color: var(--muted); }
+    .copy-hint { font-size: 0.8rem; color: var(--muted); margin-bottom: 24px; }
 
-    @media (max-width: 600px) {
-      .logo { left: 24px; }
-      .page { padding: 80px 24px 60px; }
-    }
+    @media (max-width: 600px) { .logo { left: 24px; } .page { padding: 80px 24px 60px; } }
   </style>
 </head>
 <body>
@@ -174,40 +69,39 @@
   <div class="page" id="loginView">
     <h1>Hej Johanna!</h1>
     <p class="sub">Det här är ditt verktyg för att förbereda ett kundformulär. Skriv in lösenordet så kör vi igång.</p>
-    <label>Lösenord</label>
-    <input type="password" id="pw" placeholder="••••••••" />
-    <br>
+    <div class="field">
+      <label>Lösenord</label>
+      <input type="password" id="pw" placeholder="••••••••" />
+    </div>
     <button class="btn" onclick="login()">Kom in →</button>
     <p id="loginError" style="color:#c00; margin-top:12px; font-size:0.9rem;"></p>
   </div>
 
-  <!-- Admin-formulär -->
+  <!-- Admin -->
   <div class="page" id="adminView" style="display:none;">
-    <h1>Förbered kundformulär</h1>
-    <p class="sub">Klistra in vad du vet om kunden – ett mejl, anteckningar eller en sammanfattning. Claude genererar relevanta frågor anpassade för just dem.</p>
+    <h1>Nytt kundformulär</h1>
+    <p class="sub">Fyll i kundens namn och skriv in frågorna du vill skicka. Skapa sedan en unik länk.</p>
 
     <div id="inputView">
       <div class="field">
         <label>Kundens namn</label>
-        <input type="text" id="kundnamn" placeholder="Förnamn eller företag" />
+        <input type="text" id="kundnamn" placeholder="Förnamn eller företagsnamn" />
       </div>
+
       <div class="field">
-        <label>Kontext – mejl, anteckningar eller sammanfattning</label>
-        <textarea id="kontext" placeholder="Klistra in eller skriv fritt..."></textarea>
+        <label>Frågor</label>
+        <div class="fragor-block" id="fragorBlock"></div>
+        <button class="add-btn" onclick="laggTillFraga()">+ Lägg till fråga</button>
       </div>
-      <button class="btn" id="genBtn" onclick="generera()">Generera frågor →</button>
+
+      <button class="btn" id="sparaBtn" onclick="spara()" style="margin-top: 8px;">Skapa länk →</button>
       <p id="status"></p>
     </div>
 
-    <div id="result">
-      <p style="font-size:0.9rem; color:var(--muted); margin-bottom:8px;">Föreslagna frågor – du kan skicka länken nedan till kunden:</p>
-      <div class="fragor-lista" id="fragorLista"></div>
-
+    <div id="result" style="display:none;">
       <p style="font-size:0.9rem; font-weight:500; margin-bottom:8px;">Kundens unika länk – klicka för att kopiera:</p>
       <div class="link-box" id="linkBox" onclick="kopieraLank()"></div>
       <p class="copy-hint" id="copyHint">Klicka för att kopiera</p>
-
-      <br>
       <button class="btn" onclick="reset()">Skapa nytt formulär</button>
     </div>
   </div>
@@ -219,93 +113,98 @@
     const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const PASSWORD = 'tegelhatt2024';
+    let fragorCount = 0;
+    let sessionUrl = '';
 
     function login() {
-      const pw = document.getElementById('pw').value;
-      if (pw === PASSWORD) {
+      if (document.getElementById('pw').value === PASSWORD) {
         document.getElementById('loginView').style.display = 'none';
         document.getElementById('adminView').style.display = 'block';
+        laggTillFraga();
+        laggTillFraga();
+        laggTillFraga();
       } else {
         document.getElementById('loginError').textContent = 'Fel lösenord.';
       }
     }
 
-    document.getElementById('pw')?.addEventListener('keydown', e => {
-      if (e.key === 'Enter') login();
-    });
+    document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
 
-    let sessionUrl = '';
+    function laggTillFraga() {
+      fragorCount++;
+      const id = fragorCount;
+      const block = document.getElementById('fragorBlock');
+      const rad = document.createElement('div');
+      rad.className = 'fraga-rad';
+      rad.id = `rad_${id}`;
+      rad.innerHTML = `
+        <span class="nr">${block.children.length + 1}</span>
+        <textarea id="fraga_${id}" placeholder="Skriv frågan här..."></textarea>
+        <button class="del-btn" onclick="taBort(${id})" title="Ta bort">✕</button>
+      `;
+      block.appendChild(rad);
+      uppdateraNummer();
+    }
 
-    async function generera() {
+    function taBort(id) {
+      document.getElementById(`rad_${id}`)?.remove();
+      uppdateraNummer();
+    }
+
+    function uppdateraNummer() {
+      document.querySelectorAll('.fraga-rad .nr').forEach((el, i) => {
+        el.textContent = i + 1;
+      });
+    }
+
+    async function spara() {
       const kundnamn = document.getElementById('kundnamn').value.trim();
-      const kontext = document.getElementById('kontext').value.trim();
       const status = document.getElementById('status');
-      const btn = document.getElementById('genBtn');
+      const btn = document.getElementById('sparaBtn');
 
-      if (!kundnamn || !kontext) {
-        status.textContent = 'Fyll i både namn och kontext.';
+      const fragor = Array.from(document.querySelectorAll('.fraga-rad textarea'))
+        .map((ta, i) => ({ id: i + 1, fraga: ta.value.trim(), hint: '' }))
+        .filter(f => f.fraga);
+
+      if (!kundnamn) { status.textContent = 'Fyll i kundens namn.'; return; }
+      if (fragor.length === 0) { status.textContent = 'Lägg till minst en fråga.'; return; }
+
+      btn.disabled = true;
+      status.textContent = 'Sparar...';
+
+      const { data: session, error } = await db
+        .from('sessions')
+        .insert([{ kundnamn, kontext: '', fragor }])
+        .select().single();
+
+      if (error) {
+        status.textContent = 'Något gick fel.';
+        btn.disabled = false;
         return;
       }
 
-      btn.disabled = true;
-      status.textContent = 'Genererar frågor...';
-
-      try {
-        const res = await fetch('/api/generate-form', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ kundnamn, kontext }),
-        });
-
-        const data = await res.json();
-        if (!data.fragor) throw new Error('Inga frågor genererades');
-
-        // Spara i Supabase
-        const { data: session, error } = await db
-          .from('sessions')
-          .insert([{ kundnamn, kontext, fragor: data.fragor }])
-          .select()
-          .single();
-
-        if (error) throw error;
-
-        // Visa frågor
-        const lista = document.getElementById('fragorLista');
-        lista.innerHTML = data.fragor.map(f => `
-          <div class="fraga-item">
-            <div class="fraga-text">${f.fraga}</div>
-            <div class="fraga-hint">${f.hint}</div>
-          </div>
-        `).join('');
-
-        sessionUrl = `${window.location.origin}/form.html?id=${session.id}`;
-        document.getElementById('linkBox').textContent = sessionUrl;
-
-        document.getElementById('inputView').style.display = 'none';
-        document.getElementById('result').style.display = 'block';
-        status.textContent = '';
-
-      } catch (err) {
-        status.textContent = 'Något gick fel: ' + err.message;
-        btn.disabled = false;
-      }
+      sessionUrl = `${window.location.origin}/form.html?id=${session.id}`;
+      document.getElementById('linkBox').textContent = sessionUrl;
+      document.getElementById('inputView').style.display = 'none';
+      document.getElementById('result').style.display = 'block';
+      status.textContent = '';
     }
 
     function kopieraLank() {
       navigator.clipboard.writeText(sessionUrl).then(() => {
         document.getElementById('copyHint').textContent = '✓ Kopierad!';
-        setTimeout(() => {
-          document.getElementById('copyHint').textContent = 'Klicka för att kopiera';
-        }, 2000);
+        setTimeout(() => { document.getElementById('copyHint').textContent = 'Klicka för att kopiera'; }, 2000);
       });
     }
 
     function reset() {
       document.getElementById('kundnamn').value = '';
-      document.getElementById('kontext').value = '';
+      document.getElementById('fragorBlock').innerHTML = '';
+      fragorCount = 0;
+      laggTillFraga(); laggTillFraga(); laggTillFraga();
       document.getElementById('result').style.display = 'none';
       document.getElementById('inputView').style.display = 'block';
-      document.getElementById('genBtn').disabled = false;
+      document.getElementById('sparaBtn').disabled = false;
     }
   </script>
 </body>
