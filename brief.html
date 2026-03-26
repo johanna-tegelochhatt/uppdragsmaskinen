@@ -371,13 +371,13 @@
       </div>
     </div>
 
-    <!-- 9: Vad fungerar -->
+    <!-- 9: Vad fungerar bra -->
     <div class="step" data-index="9">
       <div class="step-inner">
         <div class="step-number">09</div>
-        <h2>Vad fungerar bra med det ni har idag – och vad fungerar inte?</h2>
-        <p class="hint">Känn dig fri att vara ärlig. Det hjälper oss.</p>
-        <textarea id="fungerar" placeholder="Skriv fritt..."></textarea>
+        <h2>Vad fungerar bra med det ni har idag?</h2>
+        <p class="hint">Det kan vara loggan, tonen, en känsla – vad som helst som ni vill behålla.</p>
+        <textarea id="fungerar_bra" placeholder="Skriv fritt..."></textarea>
         <div class="btn-row">
           <button class="btn-next" onclick="goTo(10)">Nästa →</button>
           <button class="btn-skip" onclick="goTo(10)">Hoppa över</button>
@@ -385,8 +385,22 @@
       </div>
     </div>
 
-    <!-- 10: Övrigt -->
+    <!-- 10: Vad fungerar inte -->
     <div class="step" data-index="10">
+      <div class="step-inner">
+        <div class="step-number">10</div>
+        <h2>Och vad vill ni förändra?</h2>
+        <p class="hint">Vad skaver, känns gammalt eller inte stämmer längre?</p>
+        <textarea id="fungerar_inte" placeholder="Skriv fritt..."></textarea>
+        <div class="btn-row">
+          <button class="btn-next" onclick="goTo(11)">Nästa →</button>
+          <button class="btn-skip" onclick="goTo(11)">Hoppa över</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11: Övrigt -->
+    <div class="step" data-index="11">
       <div class="step-inner">
         <div class="step-number">10</div>
         <h2>Är det något mer vi borde veta?</h2>
@@ -400,7 +414,7 @@
       </div>
     </div>
 
-    <!-- 11: Tack -->
+    <!-- 12: Tack -->
     <div class="step tack">
       <div class="step-inner">
         <h2>Tack, det här är guld!</h2>
@@ -422,7 +436,7 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZnN3a3d2c2VzYnN2c3BqYnhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0Njc5MTIsImV4cCI6MjA5MDA0MzkxMn0.sR-JtpF8kcZyAVPGrTAHmOyO_Q_g-niIlu6SVZduanI';
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const TOTAL = 11;
+    const TOTAL = 12;
     let current = 0;
 
     function goTo(index) {
@@ -476,7 +490,7 @@
         kunder:       document.getElementById('kunder').value || null,
         vad_loser_ni: document.getElementById('vad_loser_ni').value || null,
         material:     getSelected('opts8'),
-        fungerar:     document.getElementById('fungerar').value || null,
+        fungerar:     (document.getElementById('fungerar_bra').value || '') + (document.getElementById('fungerar_inte').value ? '\n\nVill förändra: ' + document.getElementById('fungerar_inte').value : '') || null,
         ovrigt:       document.getElementById('ovrigt').value || null,
       };
 
