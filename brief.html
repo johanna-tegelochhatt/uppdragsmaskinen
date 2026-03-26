@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tegel & Hatt – Berätta lite mer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #a5a6f6;
+      --black: #111;
+      --orange: #fd804b;
+      --bg: #fafaf8;
+      --muted: #888;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--black);
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: var(--purple);
+      transition: width 0.5s ease;
+      z-index: 10;
+    }
+
+    .logo {
+      position: fixed;
+      top: 28px; left: 40px;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      color: var(--muted);
+      z-index: 10;
+      letter-spacing: 0.04em;
+    }
+
+    .steps {
+      display: flex;
+      height: 100vh;
+      transition: transform 0.55s cubic-bezier(0.77, 0, 0.175, 1);
+      will-change: transform;
+    }
+
+    .step {
+      min-width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 40px 100px;
+    }
+
+    .step-inner {
+      max-width: 640px;
+      width: 100%;
+    }
+
+    .step-number {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--purple);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .step h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 400;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+
+    .step .hint {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .step input,
+    .step textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #ddd;
+      padding: 12px 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--black);
+      outline: none;
+      transition: border-color 0.2s;
+      resize: none;
+      line-height: 1.6;
+    }
+
+    .step input:focus,
+    .step textarea:focus { border-bottom-color: var(--purple); }
+
+    .step textarea { min-height: 100px; }
+
+    /* Radio-knappar */
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .option {
+      padding: 10px 20px;
+      border: 1px solid #ddd;
+      border-radius: 100px;
+      font-size: 0.95rem;
+      font-weight: 300;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: #fff;
+      user-select: none;
+    }
+
+    .option:hover { border-color: var(--purple); }
+    .option.selected { border-color: var(--purple); background: var(--purple); color: #fff; }
+
+    .btn-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .btn-next {
+      background: var(--black);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-next:hover { background: var(--orange); }
+
+    .btn-skip {
+      background: none;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .btn-skip:hover { color: var(--black); }
+
+    /* Välkomstbrev */
+    .brev {
+      font-size: 1.05rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: #333;
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+
+    .brev strong {
+      font-weight: 500;
+      color: var(--black);
+    }
+
+    /* Tack */
+    .step.tack h2 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 20px; }
+    .step.tack p { font-size: 1.05rem; font-weight: 300; color: #555; line-height: 1.7; }
+
+    .nav {
+      position: fixed;
+      bottom: 36px; right: 40px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .nav button {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1px solid #ddd;
+      background: #fff;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .nav button:hover:not(:disabled) {
+      border-color: var(--purple);
+      background: var(--purple);
+      color: #fff;
+    }
+
+    .nav button:disabled { opacity: 0.2; cursor: default; }
+
+    @media (max-width: 600px) {
+      .logo { left: 24px; }
+      .step { padding: 80px 24px 100px; }
+      .nav { right: 24px; bottom: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="logo">Tegel & Hatt</div>
+
+  <div class="steps" id="steps">
+
+    <!-- 0: Brev -->
+    <div class="step">
+      <div class="step-inner">
+        <p class="brev">
+          Hej! <strong>Vad härligt att vi kanske ska jobba ihop!</strong><br><br>
+          För att hjälpa oss att komma vidare och lättare kunna sätta ett troligt estimat på arbetet skulle vi behöva fylla på med lite mer info.<br><br>
+          Det finns inga rätt eller fel-svar här – vi frågar för att lära känna er, inte för att bedöma. Svara precis som det kommer.<br><br>
+          Du kan väl svara på frågorna här så hörs vi vidare efter det.
+        </p>
+        <div class="btn-row">
+          <button class="btn-next" onclick="goTo(1)">Sätt igång →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1: Vad vill ni ha hjälp med -->
+    <div class="step" data-index="1">
+      <div class="step-inner">
+        <div class="step-number">01</div>
+        <h2>Vad hoppas ni få hjälp med?</h2>
+        <p class="hint">Välj det som stämmer bäst – eller flera.</p>
+        <div class="options" id="opts1">
+          <div class="option" onclick="toggleOption(this)">Grafisk profil</div>
+          <div class="option" onclick="toggleOption(this)">Logotyp</div>
+          <div class="option" onclick="toggleOption(this)">Webbplats</div>
+          <div class="option" onclick="toggleOption(this)">Kampanj</div>
+          <div class="option" onclick="toggleOption(this)">Trycksaker</div>
+          <div class="option" onclick="toggleOption(this)">Strategi & varumärke</div>
+          <div class="option" onclick="toggleOption(this)">Vet inte riktigt</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-next" onclick="goTo(2)">Nästa →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2: Varför nu -->
+    <div class="step" data-index="2">
+      <div class="step-inner">
+        <div class="step-number">02</div>
+        <h2>Vad är det som gör att ni söker hjälp just nu?</h2>
+        <p class="hint">Finns det en deadline, ett event, ett skifte som håller på att hända?</p>
+        <textarea id="varfor_nu" placeholder="Skriv fritt..."></textarea>
+        <div class="btn-row">
+          <button class="btn-next" onclick="goTo(3)">Nästa →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3: Vad ni gör -->
+    <div class="step" data-index="3">
+      <div class="step-inner">
+        <div class="step-number">03</div>
+        <h2>Om en ny kollega frågar vad ni egentligen gör – vad svarar ni?</h2>
+        <p class="hint">Inte er officiella beskrivning, utan hur ni faktiskt brukar förklara det.</p>
+        <textarea id="vad_ni_gor" placeholder="Skriv fritt..."></textarea>
+        <div class="btn-row">
+          <button class="btn-next" onclick="goTo(4)">Nästa →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4: Vad skiljer er -->
+    <div class="step" data-index="4">
+      <div class="step-inner">
+        <div class="step-number">04</div>
+        <h2>Vad gör er annorlunda mot andra som gör ungefär samma sak?</h2>
+        <p class="hint">Om ni inte är säkra är det också ett svar – skriv det i så fall.</p>
+        <textarea id="skiljer" placeholder="Skriv fritt..."></textarea>
+        <div class="btn-row">
+          <button class="btn-next" onclick="goTo(5)">Nästa →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5: Eniga internt -->
+    <div class="step" data-index="5">
+      <div class="step-inner">
+        <div class="step-number">05</div>
+        <h2>Är ni eniga internt om hur ni beskriver er själva?</h2>
+        <p class="hint">Det är vanligare än man tror att olika personer i samma organisation svarar lite olika på de frågorna ovan.</p>
+        <div class="options" id="opts5">
+          <div class="option" onclick="toggleOption(this, true)">Ja, vi är ganska eniga</div>
+          <div class="option" onclick="toggleOption(this, true)">Delvis – det finns olika bilder</div>
+          <div class="option" onclick="toggleOption(this, true)">Nej, det skiljer sig nog en del</div>
+          <div class="option" onclick="toggleOption(this, true)">Vi har aldrig pratat om det</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-next" onclick="goTo(6)">Nästa →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6: Era kunder -->
+    <div class="step" data-index="6">
+      <div class="step-inner">
+        <div class="step-number">06</div>
+        <h2>Vem är ni till för?</h2>
+        <p class="hint">Beskriv er viktigaste kund – gärna som en person snarare än en målgrupp.</p>
+        <textarea id="kunder" placeholder="Skriv fritt..."></textarea>
+        <div class="btn-row">
+          <button class="btn-next" onclick="goTo(7)">Nästa →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7: Vad löser ni -->
+    <div class="step" data-index="7">
+      <div class="step-inner">
+        <div class="step-number">07</div>
+        <h2>Vad köper de egentligen av er?</h2>
+        <p class="hint">Inte produkten eller tjänsten – utan vad de faktiskt får ut av det. Vad förändras för dem?</p>
+        <textarea id="vad_loser_ni" placeholder="Skriv fritt..."></textarea>
+        <div class="btn-row">
+          <button class="btn-next" onclick="goTo(8)">Nästa →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8: Vad finns idag -->
+    <div class="step" data-index="8">
+      <div class="step-inner">
+        <div class="step-number">08</div>
+        <h2>Vad har ni för material idag?</h2>
+        <p class="hint">Välj det som finns.</p>
+        <div class="options" id="opts8">
+          <div class="option" onclick="toggleOption(this)">Logotyp</div>
+          <div class="option" onclick="toggleOption(this)">Grafisk profil</div>
+          <div class="option" onclick="toggleOption(this)">Webbplats</div>
+          <div class="option" onclick="toggleOption(this)">Sociala medier</div>
+          <div class="option" onclick="toggleOption(this)">Trycksaker</div>
+          <div class="option" onclick="toggleOption(this)">Ingenting ännu</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-next" onclick="goTo(9)">Nästa →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9: Vad fungerar -->
+    <div class="step" data-index="9">
+      <div class="step-inner">
+        <div class="step-number">09</div>
+        <h2>Vad fungerar bra med det ni har idag – och vad fungerar inte?</h2>
+        <p class="hint">Känn dig fri att vara ärlig. Det hjälper oss.</p>
+        <textarea id="fungerar" placeholder="Skriv fritt..."></textarea>
+        <div class="btn-row">
+          <button class="btn-next" onclick="goTo(10)">Nästa →</button>
+          <button class="btn-skip" onclick="goTo(10)">Hoppa över</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10: Övrigt -->
+    <div class="step" data-index="10">
+      <div class="step-inner">
+        <div class="step-number">10</div>
+        <h2>Är det något mer vi borde veta?</h2>
+        <p class="hint">Något vi inte frågat om, men som känns viktigt.</p>
+        <textarea id="ovrigt" placeholder="Valfritt..."></textarea>
+        <div class="btn-row">
+          <button class="btn-next" id="sendBtn" onclick="skicka()">Skicka →</button>
+          <button class="btn-skip" onclick="skicka()">Hoppa över och skicka</button>
+        </div>
+        <p id="status" style="margin-top:16px; font-size:0.9rem; color:#888;"></p>
+      </div>
+    </div>
+
+    <!-- 11: Tack -->
+    <div class="step tack">
+      <div class="step-inner">
+        <h2>Tack, det här är guld!</h2>
+        <p>Vi läser igenom svaren noga och hör av oss snart.<br><br>
+        Hör gärna av dig om du har frågor: <a href="mailto:hej@tegelochhatt.se" style="color:var(--black)">hej@tegelochhatt.se</a></p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="nav">
+    <button id="btnBack" onclick="goBack()" disabled>←</button>
+    <button id="btnFwd" onclick="goFwd()">→</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://ibfswkwvsesbsvspjbxo.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZnN3a3d2c2VzYnN2c3BqYnhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0Njc5MTIsImV4cCI6MjA5MDA0MzkxMn0.sR-JtpF8kcZyAVPGrTAHmOyO_Q_g-niIlu6SVZduanI';
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const TOTAL = 11;
+    let current = 0;
+
+    function goTo(index) {
+      if (index < 0 || index > TOTAL) return;
+      current = index;
+      document.getElementById('steps').style.transform = `translateX(-${current * 100}vw)`;
+      updateUI();
+      setTimeout(() => {
+        const step = document.querySelectorAll('.step')[current];
+        const input = step && step.querySelector('input, textarea');
+        if (input) input.focus();
+      }, 350);
+    }
+
+    function goBack() { goTo(current - 1); }
+    function goFwd()  { goTo(current + 1); }
+
+    function toggleOption(el, single = false) {
+      if (single) {
+        el.closest('.options').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      }
+      el.classList.toggle('selected');
+    }
+
+    function getSelected(id) {
+      return Array.from(document.querySelectorAll(`#${id} .option.selected`))
+        .map(o => o.textContent).join(', ');
+    }
+
+    function updateUI() {
+      const isTack = current === TOTAL;
+      const progress = isTack ? 100 : (current / (TOTAL - 1)) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+      document.getElementById('btnBack').disabled = current <= 0;
+      document.getElementById('btnFwd').disabled = current >= TOTAL;
+      document.querySelector('.nav').style.display = isTack ? 'none' : 'flex';
+    }
+
+    async function skicka() {
+      const status = document.getElementById('status');
+      const btn = document.getElementById('sendBtn');
+      btn.disabled = true;
+      status.textContent = 'Skickar...';
+
+      const data = {
+        hjalp_med:    getSelected('opts1'),
+        varfor_nu:    document.getElementById('varfor_nu').value || null,
+        vad_ni_gor:   document.getElementById('vad_ni_gor').value || null,
+        skiljer:      document.getElementById('skiljer').value || null,
+        eniga:        getSelected('opts5'),
+        kunder:       document.getElementById('kunder').value || null,
+        vad_loser_ni: document.getElementById('vad_loser_ni').value || null,
+        material:     getSelected('opts8'),
+        fungerar:     document.getElementById('fungerar').value || null,
+        ovrigt:       document.getElementById('ovrigt').value || null,
+      };
+
+      const { error } = await client.from('briefs').insert([data]);
+
+      if (error) {
+        status.textContent = 'Något gick fel, försök igen.';
+        btn.disabled = false;
+        console.error(error);
+      } else {
+        goTo(11);
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        const step = document.querySelectorAll('.step')[current];
+        const btn = step && step.querySelector('.btn-next');
+        if (btn) btn.click();
+      }
+    });
+
+    updateUI();
+  </script>
+
+</body>
+</html>
