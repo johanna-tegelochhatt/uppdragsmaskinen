@@ -371,13 +371,16 @@
       </div>
     </div>
 
-    <!-- 9: Vad fungerar bra -->
+    <!-- 9: Nuläge -->
     <div class="step" data-index="9">
       <div class="step-inner">
         <div class="step-number">09</div>
-        <h2>Vad fungerar bra med det ni har idag?</h2>
-        <p class="hint">Det kan vara loggan, tonen, en känsla – vad som helst som ni vill behålla.</p>
-        <textarea id="fungerar_bra" placeholder="Skriv fritt..."></textarea>
+        <h2>Hur känns det ni har idag?</h2>
+        <div class="options" id="opts_nulage" style="flex-direction: column; gap: 12px; margin-top: 8px;">
+          <div class="option" style="border-radius: 10px; padding: 16px 20px; font-size: 1rem;" onclick="toggleOption(this, true)">Vi är nöjda men vill fräscha upp</div>
+          <div class="option" style="border-radius: 10px; padding: 16px 20px; font-size: 1rem;" onclick="toggleOption(this, true)">Det speglar inte längre vilka vi är</div>
+          <div class="option" style="border-radius: 10px; padding: 16px 20px; font-size: 1rem;" onclick="toggleOption(this, true)">Vi börjar helt från scratch</div>
+        </div>
         <div class="btn-row">
           <button class="btn-next" onclick="goTo(10)">Nästa →</button>
           <button class="btn-skip" onclick="goTo(10)">Hoppa över</button>
@@ -385,22 +388,8 @@
       </div>
     </div>
 
-    <!-- 10: Vad fungerar inte -->
+    <!-- 10: Övrigt -->
     <div class="step" data-index="10">
-      <div class="step-inner">
-        <div class="step-number">10</div>
-        <h2>Och vad vill ni förändra?</h2>
-        <p class="hint">Vad skaver, känns gammalt eller inte stämmer längre?</p>
-        <textarea id="fungerar_inte" placeholder="Skriv fritt..."></textarea>
-        <div class="btn-row">
-          <button class="btn-next" onclick="goTo(11)">Nästa →</button>
-          <button class="btn-skip" onclick="goTo(11)">Hoppa över</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 11: Övrigt -->
-    <div class="step" data-index="11">
       <div class="step-inner">
         <div class="step-number">10</div>
         <h2>Är det något mer vi borde veta?</h2>
@@ -436,7 +425,7 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZnN3a3d2c2VzYnN2c3BqYnhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0Njc5MTIsImV4cCI6MjA5MDA0MzkxMn0.sR-JtpF8kcZyAVPGrTAHmOyO_Q_g-niIlu6SVZduanI';
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const TOTAL = 12;
+    const TOTAL = 11;
     let current = 0;
 
     function goTo(index) {
@@ -490,7 +479,7 @@
         kunder:       document.getElementById('kunder').value || null,
         vad_loser_ni: document.getElementById('vad_loser_ni').value || null,
         material:     getSelected('opts8'),
-        fungerar:     (document.getElementById('fungerar_bra').value || '') + (document.getElementById('fungerar_inte').value ? '\n\nVill förändra: ' + document.getElementById('fungerar_inte').value : '') || null,
+        fungerar:     getSelected('opts_nulage') || null,
         ovrigt:       document.getElementById('ovrigt').value || null,
       };
 
