@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tegel & Hatt – Berätta lite mer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -36,7 +36,7 @@
     .logo {
       position: fixed;
       top: 28px; left: 40px;
-      font-family: 'Playfair Display', serif;
+      font-family: 'Cormorant Garamond', serif;
       font-size: 0.95rem;
       color: var(--muted);
       z-index: 10;
@@ -56,6 +56,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;
       padding: 80px 40px 100px;
     }
 
@@ -74,11 +75,12 @@
     }
 
     .step h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 3.75rem);
       font-weight: 400;
-      line-height: 1.25;
-      margin-bottom: 12px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
     }
 
     .step .hint {
@@ -185,7 +187,7 @@
     }
 
     /* Tack */
-    .step.tack h2 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 20px; }
+    .step.tack h2 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 20px; }
     .step.tack p { font-size: 1.05rem; font-weight: 300; color: #555; line-height: 1.7; }
 
     .nav {
