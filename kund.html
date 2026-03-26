@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tegel & Hatt – Berätta om dig</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fafaf8;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      padding: 32px 40px 0;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      color: #888;
+    }
+
+    header {
+      padding: 48px 40px 48px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      color: #111;
+    }
+
+    header p {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    form {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .question label {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+      color: #111;
+    }
+
+    .question .hint {
+      font-size: 0.875rem;
+      color: #888;
+      font-weight: 300;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .question input,
+    .question textarea {
+      width: 100%;
+      padding: 14px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 300;
+      color: #222;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+      line-height: 1.6;
+    }
+
+    .question textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .question input:focus,
+    .question textarea:focus {
+      border-color: #aaa;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 0;
+    }
+
+    button {
+      align-self: flex-start;
+      background: #111;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 16px 36px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover { background: #333; }
+
+    #status {
+      font-size: 0.95rem;
+      color: #555;
+      margin-top: -24px;
+    }
+
+    .tack {
+      display: none;
+      max-width: 720px;
+      margin: 80px auto;
+      padding: 0 40px;
+    }
+
+    .tack h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    .tack p {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+      header, form, .top-bar, .tack { padding-left: 24px; padding-right: 24px; }
+      .row { grid-template-columns: 1fr; }
+      header h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span class="logo">Tegel & Hatt</span>
+  </div>
+
+  <header>
+    <h1>Berätta om dig och din situation.</h1>
+    <p>Det här tar ungefär 5 minuter. Svaren hjälper oss att använda vår tid tillsammans på bästa sätt.</p>
+  </header>
+
+  <form id="form">
+
+    <div class="row">
+      <div class="question">
+        <label>Ditt namn</label>
+        <input type="text" name="namn" placeholder="Förnamn Efternamn" />
+      </div>
+      <div class="question">
+        <label>Organisation</label>
+        <input type="text" name="organisation" placeholder="Företag eller organisation" />
+      </div>
+    </div>
+
+    <div class="question">
+      <label>Vad är din roll?</label>
+      <span class="hint">Titel, ansvar, eller hur du själv skulle beskriva vad du gör.</span>
+      <input type="text" name="roll" placeholder="T.ex. VD, teamledare, kommunikationsansvarig..." />
+    </div>
+
+    <hr class="divider" />
+
+    <div class="question">
+      <label>Vad är din största utmaning just nu?</label>
+      <span class="hint">Beskriv situationen som den är idag – vad är svårt, krångligt eller otydligt?</span>
+      <textarea name="utmaning" placeholder="Skriv fritt..."></textarea>
+    </div>
+
+    <div class="question">
+      <label>Hur skulle det se ut om det fungerade bättre?</label>
+      <span class="hint">Inte lösningen – utan hur det skulle kännas eller se ut i vardagen.</span>
+      <textarea name="onskat_lage" placeholder="Skriv fritt..."></textarea>
+    </div>
+
+    <div class="question">
+      <label>Har du försökt lösa det här tidigare?</label>
+      <span class="hint">Vad provade du? Vad fungerade, vad fungerade inte?</span>
+      <textarea name="tidigare_forsok" placeholder="Skriv fritt..."></textarea>
+    </div>
+
+    <div class="question">
+      <label>Är det något annat du vill att vi ska veta?</label>
+      <textarea name="ovrigt" placeholder="Valfritt..."></textarea>
+    </div>
+
+    <button type="submit">Skicka</button>
+    <p id="status"></p>
+
+  </form>
+
+  <div class="tack" id="tack">
+    <h2>Tack!</h2>
+    <p>Vi har fått dina svar och ser fram emot vårt samtal.<br>Hör av dig om du har frågor.</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://ibfswkwvsesbsvspjbxo.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZnN3a3d2c2VzYnN2c3BqYnhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0Njc5MTIsImV4cCI6MjA5MDA0MzkxMn0.sR-JtpF8kcZyAVPGrTAHmOyO_Q_g-niIlu6SVZduanI';
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const status = document.getElementById('status');
+      const btn = e.target.querySelector('button');
+      btn.disabled = true;
+      status.textContent = 'Skickar...';
+
+      const data = {
+        namn: e.target.namn.value,
+        organisation: e.target.organisation.value,
+        roll: e.target.roll.value,
+        utmaning: e.target.utmaning.value,
+        onskat_lage: e.target.onskat_lage.value,
+        tidigare_forsok: e.target.tidigare_forsok.value,
+        ovrigt: e.target.ovrigt.value,
+      };
+
+      const { error } = await client.from('kunder').insert([data]);
+
+      if (error) {
+        status.textContent = 'Något gick fel. Försök igen.';
+        btn.disabled = false;
+        console.error(error);
+      } else {
+        document.getElementById('form').style.display = 'none';
+        document.getElementById('tack').style.display = 'block';
+      }
+    });
+  </script>
+
+</body>
+</html>
