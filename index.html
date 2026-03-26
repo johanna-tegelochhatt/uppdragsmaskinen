@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uppdragsmaskinen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fafaf8;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 80px 40px 60px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      color: #111;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    form {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .question label {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+      color: #111;
+    }
+
+    .question textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 300;
+      color: #222;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+      line-height: 1.6;
+    }
+
+    .question textarea:focus {
+      border-color: #aaa;
+    }
+
+    button {
+      align-self: flex-start;
+      background: #111;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 16px 36px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover { background: #333; }
+
+    #status {
+      font-size: 0.95rem;
+      color: #555;
+      margin-top: -32px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Berätta om ditt jobb, Johanna.</h1>
+    <p>Svara på frågorna nedan – skriv det som kommer upp, det behöver inte vara perfekt. Vi använder svaren för att hitta vad vi ska bygga.</p>
+  </header>
+
+  <form id="form">
+    <div class="question">
+      <label>Vad lägger du mest tid på i jobbet som du önskar gick snabbare?</label>
+      <textarea name="q1" placeholder="Skriv fritt..."></textarea>
+    </div>
+
+    <div class="question">
+      <label>Finns det något du gör om och om igen som känns onödigt eller tråkigt?</label>
+      <textarea name="q2" placeholder="Skriv fritt..."></textarea>
+    </div>
+
+    <div class="question">
+      <label>Vad är det svåraste med kommunikation och ledarskap i din vardag?</label>
+      <textarea name="q3" placeholder="Skriv fritt..."></textarea>
+    </div>
+
+    <div class="question">
+      <label>Om du hade ett verktyg som byggde precis vad du ville – vad skulle du be om?</label>
+      <textarea name="q4" placeholder="Skriv fritt..."></textarea>
+    </div>
+
+    <div class="question">
+      <label>Är det något annat du vill att jag ska veta om ditt jobb?</label>
+      <textarea name="q5" placeholder="Valfritt..."></textarea>
+    </div>
+
+    <button type="submit">Skicka svar</button>
+    <p id="status"></p>
+  </form>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Supabase-konfiguration fylls i senare
+    const SUPABASE_URL = 'SUPABASE_URL_HERE';
+    const SUPABASE_KEY = 'SUPABASE_KEY_HERE';
+
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const status = document.getElementById('status');
+      status.textContent = 'Skickar...';
+
+      const data = {
+        q1: e.target.q1.value,
+        q2: e.target.q2.value,
+        q3: e.target.q3.value,
+        q4: e.target.q4.value,
+        q5: e.target.q5.value,
+      };
+
+      const { error } = await client.from('svar').insert([data]);
+
+      if (error) {
+        status.textContent = 'Något gick fel. Försök igen.';
+        console.error(error);
+      } else {
+        status.textContent = 'Tack! Dina svar är sparade.';
+        e.target.reset();
+      }
+    });
+  </script>
+
+</body>
+</html>
