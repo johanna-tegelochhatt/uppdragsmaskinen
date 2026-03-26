@@ -7,12 +7,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --purple: #a5a6f6;
       --black: #111;
       --orange: #fd804b;
-      --bg: #fafaf8;
+      --bg: #f2f2f0;
       --muted: #888;
     }
 
@@ -24,8 +23,6 @@
       overflow: hidden;
     }
 
-    .progress-bar { display: none; }
-
     .logo {
       position: fixed;
       top: 28px; left: 40px;
@@ -36,53 +33,68 @@
       letter-spacing: 0.04em;
     }
 
-    .steps {
-      display: flex;
-      height: 100vh;
-      transition: transform 0.55s cubic-bezier(0.77, 0, 0.175, 1);
-      will-change: transform;
-    }
-
-    .step {
-      min-width: 100vw;
+    /* Steg-wrapper */
+    .stage {
       height: 100vh;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
-      padding: 80px 40px 100px;
+      justify-content: center;
+      padding: 80px 40px 80px;
     }
 
-    .step-inner {
-      max-width: 680px;
-      width: 100%;
+    .card {
       background: #fff;
       border-radius: 20px;
       padding: 52px 56px;
-      box-shadow: 0 2px 24px rgba(0,0,0,0.06);
+      max-width: 680px;
+      width: 100%;
+      box-shadow: 0 2px 32px rgba(0,0,0,0.07);
+      animation: fadeUp 0.35s ease both;
     }
 
-    .step-number { display: none; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-    .step h2 {
+    .card h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 5vw, 3.75rem);
+      font-size: clamp(2rem, 4.5vw, 3.25rem);
       font-weight: 400;
       line-height: 1.15;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       letter-spacing: -0.01em;
     }
 
-    .step .hint {
+    .card .hint {
       font-size: 0.95rem;
       font-weight: 300;
       color: var(--muted);
       margin-bottom: 28px;
-      line-height: 1.6;
+      line-height: 1.65;
     }
 
-    .step input,
-    .step textarea {
+    /* Brev-intro */
+    .brev-fran {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--purple);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .brev-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+      font-weight: 400;
+      line-height: 1.7;
+      color: #222;
+      margin-bottom: 36px;
+    }
+
+    /* Textfält */
+    textarea {
       width: 100%;
       background: #f7f7f5;
       border: none;
@@ -96,42 +108,31 @@
       transition: box-shadow 0.2s;
       resize: none;
       line-height: 1.6;
+      min-height: 110px;
     }
+    textarea:focus { box-shadow: 0 0 0 2px var(--purple); }
 
-    .step input:focus,
-    .step textarea:focus { box-shadow: 0 0 0 2px var(--purple); }
-
-    .step textarea { min-height: 110px; }
-
-    /* Radio-knappar */
-    .options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
+    /* Alternativ-knappar */
+    .options { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 4px; }
+    .options.col { flex-direction: column; gap: 10px; }
 
     .option {
-      padding: 10px 20px;
-      border: 1px solid #ddd;
-      border-radius: 100px;
+      padding: 12px 20px;
+      border: 1px solid #e0e0dc;
+      border-radius: 10px;
       font-size: 0.95rem;
       font-weight: 300;
       cursor: pointer;
       transition: all 0.15s;
       background: #fff;
       user-select: none;
+      line-height: 1.4;
     }
-
-    .option:hover { border-color: var(--purple); }
+    .option:hover { border-color: var(--purple); background: #f5f5ff; }
     .option.selected { border-color: var(--purple); background: var(--purple); color: #fff; }
 
-    .btn-row {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-top: 28px;
-    }
+    /* Knappar */
+    .btn-row { display: flex; align-items: center; gap: 16px; margin-top: 28px; }
 
     .btn-next {
       background: var(--black);
@@ -141,370 +142,378 @@
       font-weight: 500;
       padding: 14px 28px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       transition: background 0.2s;
     }
-
     .btn-next:hover { background: var(--orange); }
+    .btn-next:disabled { background: #ccc; cursor: default; }
 
     .btn-skip {
-      background: none;
-      border: none;
+      background: none; border: none;
       font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
-      color: var(--muted);
+      font-size: 0.85rem; color: var(--muted);
       cursor: pointer;
       text-decoration: underline;
       text-underline-offset: 3px;
     }
-
     .btn-skip:hover { color: var(--black); }
 
-    /* Välkomstbrev */
-    .brev-fran {
-      font-size: 0.72rem;
-      font-weight: 500;
-      color: var(--purple);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 32px;
-    }
-
-    .brev {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      font-weight: 400;
-      line-height: 1.7;
-      color: #222;
-      margin-bottom: 40px;
-      max-width: 520px;
-    }
-
-    .brev strong { font-weight: 600; }
-
-    /* Tack */
-    .step.tack h2 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 20px; }
-    .step.tack p { font-size: 1.05rem; font-weight: 300; color: #555; line-height: 1.7; }
-
+    /* Nav-pilar */
     .nav {
       position: fixed;
-      bottom: 36px; right: 40px;
-      display: flex;
-      gap: 8px;
-      z-index: 10;
+      bottom: 32px; right: 40px;
+      display: flex; gap: 8px; z-index: 10;
     }
-
     .nav button {
-      width: 44px; height: 44px;
+      width: 40px; height: 40px;
       border-radius: 50%;
       border: 1px solid #ddd;
       background: #fff;
       cursor: pointer;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
       transition: all 0.2s;
     }
-
-    .nav button:hover:not(:disabled) {
-      border-color: var(--purple);
-      background: var(--purple);
-      color: #fff;
-    }
-
+    .nav button:hover:not(:disabled) { border-color: var(--purple); background: var(--purple); color: #fff; }
     .nav button:disabled { opacity: 0.2; cursor: default; }
 
     @media (max-width: 600px) {
       .logo { left: 24px; }
-      .step { padding: 80px 24px 100px; }
-      .nav { right: 24px; bottom: 28px; }
+      .stage { padding: 70px 16px 70px; }
+      .card { padding: 32px 28px; border-radius: 16px; }
+      .nav { right: 24px; bottom: 24px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="progress-bar" id="progressBar"></div>
   <div class="logo">Tegel & Hatt</div>
-
-  <div class="steps" id="steps">
-
-    <!-- 0: Brev -->
-    <div class="step">
-      <div class="step-inner">
-        <p class="brev-fran">Från Tegel & Hatt</p>
-        <p class="brev">
-          Hej! <strong>Vad härligt att vi kanske ska jobba ihop.</strong><br><br>
-          Vi ställer några korta frågor för att förstå er situation bättre – så kan vi ge er ett relevant svar snabbare. Det finns inga rätt eller fel.<br><br>
-          Svara precis som det kommer, så hörs vi sen.
-        </p>
-        <div class="btn-row">
-          <button class="btn-next" onclick="goTo(1)">Sätt igång →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 1: Vad vill ni ha hjälp med -->
-    <div class="step" data-index="1">
-      <div class="step-inner">
-        <div class="step-number">01</div>
-        <h2>Vad hoppas ni få hjälp med?</h2>
-        <p class="hint">Välj det som stämmer bäst – eller flera.</p>
-        <div class="options" id="opts1">
-          <div class="option" onclick="toggleOption(this)">Grafisk profil</div>
-          <div class="option" onclick="toggleOption(this)">Logotyp</div>
-          <div class="option" onclick="toggleOption(this)">Webbplats</div>
-          <div class="option" onclick="toggleOption(this)">Kampanj</div>
-          <div class="option" onclick="toggleOption(this)">Trycksaker</div>
-          <div class="option" onclick="toggleOption(this)">Strategi & varumärke</div>
-          <div class="option" onclick="toggleOption(this)">Kommunikationsutmaning</div>
-          <div class="option" onclick="toggleOption(this)">Visuell kommunikation</div>
-          <div class="option" onclick="toggleOption(this)">Vet inte riktigt</div>
-        </div>
-        <div class="btn-row">
-          <button class="btn-next" onclick="goTo(2)">Nästa →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2: Varför nu -->
-    <div class="step" data-index="2">
-      <div class="step-inner">
-        <div class="step-number">02</div>
-        <h2>Vad är det som gör att ni söker hjälp just nu?</h2>
-        <p class="hint">Finns det en deadline, ett event, ett skifte som håller på att hända?</p>
-        <textarea id="varfor_nu" placeholder="Skriv fritt..."></textarea>
-        <div class="btn-row">
-          <button class="btn-next" onclick="goTo(3)">Nästa →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3: Vad ni gör -->
-    <div class="step" data-index="3">
-      <div class="step-inner">
-        <div class="step-number">03</div>
-        <h2>Om en ny kollega frågar vad ni egentligen gör – vad svarar ni?</h2>
-        <p class="hint">Inte er officiella beskrivning, utan hur ni faktiskt brukar förklara det.</p>
-        <textarea id="vad_ni_gor" placeholder="Skriv fritt..."></textarea>
-        <div class="btn-row">
-          <button class="btn-next" onclick="goTo(4)">Nästa →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4: Vad skiljer er -->
-    <div class="step" data-index="4">
-      <div class="step-inner">
-        <div class="step-number">04</div>
-        <h2>Vad gör er annorlunda mot andra som gör ungefär samma sak?</h2>
-        <p class="hint">Om ni inte är säkra är det också ett svar – skriv det i så fall.</p>
-        <textarea id="skiljer" placeholder="Skriv fritt..."></textarea>
-        <div class="btn-row">
-          <button class="btn-next" onclick="goTo(5)">Nästa →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 5: Eniga internt -->
-    <div class="step" data-index="5">
-      <div class="step-inner">
-        <div class="step-number">05</div>
-        <h2>Är ni eniga internt om hur ni beskriver er själva?</h2>
-        <p class="hint">Det är vanligare än man tror att olika personer i samma organisation svarar lite olika på de frågorna ovan.</p>
-        <div class="options" id="opts5">
-          <div class="option" onclick="toggleOption(this, true)">Ja, vi är ganska eniga</div>
-          <div class="option" onclick="toggleOption(this, true)">Delvis – det finns olika bilder</div>
-          <div class="option" onclick="toggleOption(this, true)">Nej, det skiljer sig nog en del</div>
-          <div class="option" onclick="toggleOption(this, true)">Vi har aldrig pratat om det</div>
-        </div>
-        <div class="btn-row">
-          <button class="btn-next" onclick="goTo(6)">Nästa →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 6: Era kunder -->
-    <div class="step" data-index="6">
-      <div class="step-inner">
-        <div class="step-number">06</div>
-        <h2>Vem är ni till för?</h2>
-        <p class="hint">Beskriv er viktigaste kund – gärna som en person snarare än en målgrupp.</p>
-        <textarea id="kunder" placeholder="Skriv fritt..."></textarea>
-        <div class="btn-row">
-          <button class="btn-next" onclick="goTo(7)">Nästa →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 7: Vad löser ni -->
-    <div class="step" data-index="7">
-      <div class="step-inner">
-        <div class="step-number">07</div>
-        <h2>Nu är jag nyfiken på hur ni beskriver vad ni gör.</h2>
-        <p class="hint">Hur skulle du beskriva er verksamhet för någon som inte har mött er förut?</p>
-        <textarea id="vad_loser_ni" placeholder="Skriv fritt..."></textarea>
-        <div class="btn-row">
-          <button class="btn-next" onclick="goTo(8)">Nästa →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 8: Vad finns idag -->
-    <div class="step" data-index="8">
-      <div class="step-inner">
-        <div class="step-number">08</div>
-        <h2>Vad har ni för material idag?</h2>
-        <p class="hint">Välj det som finns.</p>
-        <div class="options" id="opts8">
-          <div class="option" onclick="toggleOption(this)">Logotyp</div>
-          <div class="option" onclick="toggleOption(this)">Grafisk profil</div>
-          <div class="option" onclick="toggleOption(this)">Webbplats</div>
-          <div class="option" onclick="toggleOption(this)">Sociala medier</div>
-          <div class="option" onclick="toggleOption(this)">Trycksaker</div>
-          <div class="option" onclick="toggleOption(this)">Ingenting ännu</div>
-        </div>
-        <div class="btn-row">
-          <button class="btn-next" onclick="goTo(9)">Nästa →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 9: Nuläge -->
-    <div class="step" data-index="9">
-      <div class="step-inner">
-        <div class="step-number">09</div>
-        <h2>Hur känns det ni har idag?</h2>
-        <div class="options" id="opts_nulage" style="flex-direction: column; gap: 12px; margin-top: 8px;">
-          <div class="option" style="border-radius: 10px; padding: 16px 20px; font-size: 1rem;" onclick="toggleOption(this, true)">Vi är nöjda men vill fräscha upp</div>
-          <div class="option" style="border-radius: 10px; padding: 16px 20px; font-size: 1rem;" onclick="toggleOption(this, true)">Det speglar inte längre vilka vi är</div>
-          <div class="option" style="border-radius: 10px; padding: 16px 20px; font-size: 1rem;" onclick="toggleOption(this, true)">Vi börjar helt från scratch</div>
-        </div>
-        <div class="btn-row">
-          <button class="btn-next" onclick="goTo(10)">Nästa →</button>
-          <button class="btn-skip" onclick="goTo(10)">Hoppa över</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 10: Övrigt -->
-    <div class="step" data-index="10">
-      <div class="step-inner">
-        <div class="step-number">10</div>
-        <h2>Är det något mer vi borde veta?</h2>
-        <p class="hint">Något vi inte frågat om, men som känns viktigt.</p>
-        <textarea id="ovrigt" placeholder="Valfritt..."></textarea>
-        <div class="btn-row">
-          <button class="btn-next" id="sendBtn" onclick="skicka()">Skicka →</button>
-          <button class="btn-skip" onclick="skicka()">Hoppa över och skicka</button>
-        </div>
-        <p id="status" style="margin-top:16px; font-size:0.9rem; color:#888;"></p>
-      </div>
-    </div>
-
-    <!-- 12: Tack -->
-    <div class="step tack">
-      <div class="step-inner">
-        <h2>Tack, det här är guld!</h2>
-        <p>Vi läser igenom svaren noga och hör av oss snart.<br><br>
-        Hör gärna av dig om du har frågor: <a href="mailto:hej@tegelochhatt.se" style="color:var(--black)">hej@tegelochhatt.se</a></p>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="nav">
-    <button id="btnBack" onclick="goBack()" disabled>←</button>
-    <button id="btnFwd" onclick="goFwd()">→</button>
+  <div class="stage" id="stage"></div>
+  <div class="nav" id="nav">
+    <button id="btnBack" onclick="prev()" disabled>←</button>
+    <button id="btnFwd" onclick="next()">→</button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = 'https://ibfswkwvsesbsvspjbxo.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZnN3a3d2c2VzYnN2c3BqYnhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0Njc5MTIsImV4cCI6MjA5MDA0MzkxMn0.sR-JtpF8kcZyAVPGrTAHmOyO_Q_g-niIlu6SVZduanI';
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const TOTAL = 11;
-    let current = 0;
+    // ── Svar-objekt ──
+    const svar = {
+      hjalp_med: [],
+      nulage: '',
+      varfor_nu: '',
+      nar: '',
+      budget: '',
+      material: [],
+      // Track A
+      vem_ar_ni: '',
+      skiljer: '',
+      // Track B
+      kommunicera: '',
+      framgang: '',
+      provat: '',
+      // Shared
+      ovrigt: ''
+    };
 
-    function goTo(index) {
-      if (index < 0 || index > TOTAL) return;
-      current = index;
-      document.getElementById('steps').style.transform = `translateX(-${current * 100}vw)`;
-      updateUI();
+    // ── Hjälpfunktioner ──
+    function trackB() {
+      return svar.hjalp_med.some(v =>
+        v.includes('Kommunikationsutmaning') || v.includes('Löpande') || v.includes('Vet inte')
+      );
+    }
+
+    function hjalpText() {
+      if (!svar.hjalp_med.length) return 'ert uppdrag';
+      if (svar.hjalp_med.length === 1) return svar.hjalp_med[0].toLowerCase();
+      return svar.hjalp_med.slice(0, -1).join(', ').toLowerCase() + ' och ' + svar.hjalp_med[svar.hjalp_med.length - 1].toLowerCase();
+    }
+
+    function q2Heading() {
+      const h = svar.hjalp_med;
+      if (h.includes('Grafisk profil')) return 'Grafisk profil – ett av de roligaste sakerna vi vet.';
+      if (h.includes('Logotyp')) return 'En ny logotyp. Spännande – där börjar mycket.';
+      if (h.includes('Webbplats')) return 'En ny webbplats. Alltid ett bra tillfälle att tänka om.';
+      if (h.includes('Kommunikationsutmaning')) return 'En kommunikationsutmaning – precis den typen av frågor vi älskar.';
+      if (h.includes('Löpande samarbete')) return 'Löpande samarbete – så ser våra bästa relationer ut.';
+      if (h.includes('Vet inte riktigt')) return 'Inga problem – vi hjälper er lista ut det.';
+      return `${hjalpText().charAt(0).toUpperCase() + hjalpText().slice(1)} – kul att ni hör av er.`;
+    }
+
+    function q3Hint() {
+      if (svar.nulage.includes('nöjda')) return 'Vad är det som gör att det känns rätt att ta tag i det nu?';
+      if (svar.nulage.includes('speglar inte')) return 'Har något hänt, eller är det mer en känsla som vuxit fram?';
+      if (svar.nulage.includes('scratch')) return 'Spännande läge – vad är det som gör att det är dags nu?';
+      return 'Finns det en deadline, ett event, ett skifte som håller på att hända?';
+    }
+
+    function q7Hint() {
+      if (trackB()) return `Ni nämnde att ni vill jobba med ${hjalpText()}. Vad är det ni vill säga – och till vem?`;
+      return 'Beskriv er viktigaste kund – gärna som en person, inte en målgrupp.';
+    }
+
+    // ── Steg-definitioner ──
+    // path beräknas dynamiskt
+    function getPath() {
+      if (trackB()) return ['intro','q1','q2','q3','q4','q5','q6b','q7b','q8b','ovrigt','tack'];
+      else           return ['intro','q1','q2','q3','q4','q5','q6a','q7','q8a','ovrigt','tack'];
+    }
+
+    let pathIndex = 0;
+
+    function currentId() { return getPath()[pathIndex]; }
+
+    // ── Rendera steg ──
+    function render() {
+      const id = currentId();
+      const stage = document.getElementById('stage');
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = buildStep(id);
+      stage.innerHTML = '';
+      stage.appendChild(card);
+
+      // Fokusera första input
       setTimeout(() => {
-        const step = document.querySelectorAll('.step')[current];
-        const input = step && step.querySelector('input, textarea');
-        if (input) input.focus();
-      }, 350);
+        const el = card.querySelector('textarea');
+        if (el) el.focus();
+      }, 100);
+
+      updateNav();
     }
 
-    function goBack() { goTo(current - 1); }
-    function goFwd()  { goTo(current + 1); }
+    function buildStep(id) {
+      switch(id) {
 
-    function toggleOption(el, single = false) {
-      if (single) {
-        el.closest('.options').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        case 'intro': return `
+          <p class="brev-fran">Från Tegel & Hatt</p>
+          <p class="brev-text">Hej! <strong>Vad härligt att vi kanske ska jobba ihop.</strong><br><br>
+          Vi ställer några korta frågor för att förstå er situation bättre – och för att kunna ge er ett relevant svar snabbare. Det finns inga rätt eller fel.<br><br>
+          Svara precis som det kommer, så hörs vi sen.</p>
+          <div class="btn-row">
+            <button class="btn-next" onclick="next()">Sätt igång →</button>
+          </div>`;
+
+        case 'q1': return `
+          <h2>Vad hoppas ni få hjälp med?</h2>
+          <p class="hint">Välj det som stämmer – du kan välja flera.</p>
+          <div class="options" id="opts_hjalp">
+            ${['Grafisk profil','Logotyp','Webbplats','Kampanj','Trycksaker','Kommunikationsutmaning','Visuell kommunikation','Löpande samarbete','Vet inte riktigt']
+              .map(o => `<div class="option${svar.hjalp_med.includes(o) ? ' selected' : ''}" onclick="toggle(this,'hjalp_med')">${o}</div>`).join('')}
+          </div>
+          <div class="btn-row">
+            <button class="btn-next" onclick="saveAndNext()">Nästa →</button>
+          </div>`;
+
+        case 'q2': return `
+          <h2>${q2Heading()}<br>Hur ser läget ut idag?</h2>
+          <div class="options col" id="opts_nulage" style="margin-top: 16px;">
+            ${['Vi är nöjda men vill fräscha upp','Det speglar inte längre vilka vi är','Vi börjar helt från scratch']
+              .map(o => `<div class="option${svar.nulage === o ? ' selected' : ''}" onclick="selectOne(this,'nulage')">${o}</div>`).join('')}
+          </div>
+          <div class="btn-row">
+            <button class="btn-next" onclick="next()">Nästa →</button>
+          </div>`;
+
+        case 'q3': return `
+          <h2>Vad är det som gör att ni söker hjälp just nu?</h2>
+          <p class="hint">${q3Hint()}</p>
+          <textarea id="val_varfor_nu" placeholder="Skriv fritt...">${svar.varfor_nu}</textarea>
+          <div class="btn-row">
+            <button class="btn-next" onclick="saveText('varfor_nu','val_varfor_nu'); next()">Nästa →</button>
+            <button class="btn-skip" onclick="next()">Hoppa över</button>
+          </div>`;
+
+        case 'q4': return `
+          <h2>När behöver det vara klart?</h2>
+          <div class="options col" id="opts_nar" style="margin-top: 8px;">
+            ${['Inom 1–2 månader','Om 3–6 månader','Om mer än 6 månader','Inget bestämt datum ännu']
+              .map(o => `<div class="option${svar.nar === o ? ' selected' : ''}" onclick="selectOne(this,'nar')">${o}</div>`).join('')}
+          </div>
+          <div class="btn-row">
+            <button class="btn-next" onclick="next()">Nästa →</button>
+            <button class="btn-skip" onclick="next()">Hoppa över</button>
+          </div>`;
+
+        case 'q5': return `
+          <h2>Och hur ser budgeten ut?</h2>
+          <p class="hint">Det är ok att inte veta exakt – välj det som känns närmast.</p>
+          <div class="options col" id="opts_budget" style="margin-top: 8px;">
+            ${['70 000 – 100 000 kr','150 000 – 250 000 kr','300 000 kr och uppåt','Löpande samarbete / konsulthjälp','Vet inte än']
+              .map(o => `<div class="option${svar.budget === o ? ' selected' : ''}" onclick="selectOne(this,'budget')">${o}</div>`).join('')}
+          </div>
+          <div class="btn-row">
+            <button class="btn-next" onclick="next()">Nästa →</button>
+            <button class="btn-skip" onclick="next()">Hoppa över</button>
+          </div>`;
+
+        case 'q6a': return `
+          <h2>Vad finns det för material idag?</h2>
+          <p class="hint">Välj det som finns – även om det är gammalt eller halvdant.</p>
+          <div class="options" id="opts_material">
+            ${['Logotyp','Grafisk profil','Webbplats','Sociala medier','Trycksaker','Ingenting ännu']
+              .map(o => `<div class="option${svar.material.includes(o) ? ' selected' : ''}" onclick="toggle(this,'material')">${o}</div>`).join('')}
+          </div>
+          <div class="btn-row">
+            <button class="btn-next" onclick="next()">Nästa →</button>
+          </div>`;
+
+        case 'q7': return `
+          <h2>Vem är ni till för?</h2>
+          <p class="hint">${q7Hint()}</p>
+          <textarea id="val_vem_ar_ni" placeholder="Skriv fritt...">${svar.vem_ar_ni}</textarea>
+          <div class="btn-row">
+            <button class="btn-next" onclick="saveText('vem_ar_ni','val_vem_ar_ni'); next()">Nästa →</button>
+            <button class="btn-skip" onclick="next()">Hoppa över</button>
+          </div>`;
+
+        case 'q8a': return `
+          <h2>Vad gör er annorlunda?</h2>
+          <p class="hint">Inte er officiella beskrivning – utan hur ni faktiskt brukar förklara det.</p>
+          <textarea id="val_skiljer" placeholder="Skriv fritt...">${svar.skiljer}</textarea>
+          <div class="btn-row">
+            <button class="btn-next" onclick="saveText('skiljer','val_skiljer'); next()">Nästa →</button>
+            <button class="btn-skip" onclick="next()">Hoppa över</button>
+          </div>`;
+
+        case 'q6b': return `
+          <h2>Vad är det ni vill kommunicera – och till vem?</h2>
+          <p class="hint">Beskriv budskapet och vem ni vill nå. Det behöver inte vara perfekt formulerat.</p>
+          <textarea id="val_kommunicera" placeholder="Skriv fritt...">${svar.kommunicera}</textarea>
+          <div class="btn-row">
+            <button class="btn-next" onclick="saveText('kommunicera','val_kommunicera'); next()">Nästa →</button>
+            <button class="btn-skip" onclick="next()">Hoppa över</button>
+          </div>`;
+
+        case 'q7b': return `
+          <h2>Hur vet ni om det har gått bra?</h2>
+          <p class="hint">Vad är ett lyckat resultat för er – hur märks det i vardagen?</p>
+          <textarea id="val_framgang" placeholder="Skriv fritt...">${svar.framgang}</textarea>
+          <div class="btn-row">
+            <button class="btn-next" onclick="saveText('framgang','val_framgang'); next()">Nästa →</button>
+            <button class="btn-skip" onclick="next()">Hoppa över</button>
+          </div>`;
+
+        case 'q8b': return `
+          <h2>Har ni försökt lösa det här tidigare?</h2>
+          <p class="hint">Vad provade ni? Vad funkade, vad funkade inte?</p>
+          <textarea id="val_provat" placeholder="Skriv fritt...">${svar.provat}</textarea>
+          <div class="btn-row">
+            <button class="btn-next" onclick="saveText('provat','val_provat'); next()">Nästa →</button>
+            <button class="btn-skip" onclick="next()">Hoppa över</button>
+          </div>`;
+
+        case 'ovrigt': return `
+          <h2>Är det något mer vi borde veta?</h2>
+          <p class="hint">Något vi inte frågat om, men som känns viktigt att ni berättar.</p>
+          <textarea id="val_ovrigt" placeholder="Valfritt...">${svar.ovrigt}</textarea>
+          <div class="btn-row">
+            <button class="btn-next" id="sendBtn" onclick="saveText('ovrigt','val_ovrigt'); skicka()">Skicka →</button>
+            <button class="btn-skip" onclick="skicka()">Hoppa över och skicka</button>
+          </div>
+          <p id="status" style="margin-top:14px; font-size:0.9rem; color:var(--muted);"></p>`;
+
+        case 'tack': return `
+          <h2>Tack, det här är guld!</h2>
+          <p class="hint" style="font-size:1rem; color:#444;">Vi läser igenom svaren noga och återkommer snart med våra tankar.<br><br>
+          Hör gärna av dig om du har frågor: <a href="mailto:hej@tegelochhatt.se" style="color:var(--black)">hej@tegelochhatt.se</a></p>`;
+
+        default: return '';
       }
+    }
+
+    // ── Navigation ──
+    function next() {
+      const path = getPath();
+      if (pathIndex < path.length - 1) {
+        pathIndex++;
+        render();
+      }
+    }
+
+    function prev() {
+      if (pathIndex > 0) {
+        pathIndex--;
+        render();
+      }
+    }
+
+    function saveAndNext() {
+      next();
+    }
+
+    function updateNav() {
+      const path = getPath();
+      const isTack = currentId() === 'tack';
+      document.getElementById('btnBack').disabled = pathIndex <= 0;
+      document.getElementById('btnFwd').disabled = pathIndex >= path.length - 1;
+      document.getElementById('nav').style.display = isTack ? 'none' : 'flex';
+    }
+
+    // ── Svar-hantering ──
+    function toggle(el, key) {
       el.classList.toggle('selected');
+      svar[key] = Array.from(el.closest('.options').querySelectorAll('.option.selected')).map(e => e.textContent);
     }
 
-    function getSelected(id) {
-      return Array.from(document.querySelectorAll(`#${id} .option.selected`))
-        .map(o => o.textContent).join(', ');
+    function selectOne(el, key) {
+      el.closest('.options').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      svar[key] = el.textContent;
     }
 
-    function updateUI() {
-      const isTack = current === TOTAL;
-      const progress = isTack ? 100 : (current / (TOTAL - 1)) * 100;
-      document.getElementById('progressBar').style.width = progress + '%';
-      document.getElementById('btnBack').disabled = current <= 0;
-      document.getElementById('btnFwd').disabled = current >= TOTAL;
-      document.querySelector('.nav').style.display = isTack ? 'none' : 'flex';
+    function saveText(key, elId) {
+      const el = document.getElementById(elId);
+      if (el) svar[key] = el.value;
     }
 
+    // ── Skicka ──
     async function skicka() {
-      const status = document.getElementById('status');
       const btn = document.getElementById('sendBtn');
-      btn.disabled = true;
-      status.textContent = 'Skickar...';
+      const status = document.getElementById('status');
+      if (btn) btn.disabled = true;
+      if (status) status.textContent = 'Skickar...';
 
       const data = {
-        hjalp_med:    getSelected('opts1'),
-        varfor_nu:    document.getElementById('varfor_nu').value || null,
-        vad_ni_gor:   document.getElementById('vad_ni_gor').value || null,
-        skiljer:      document.getElementById('skiljer').value || null,
-        eniga:        getSelected('opts5'),
-        kunder:       document.getElementById('kunder').value || null,
-        vad_loser_ni: document.getElementById('vad_loser_ni').value || null,
-        material:     getSelected('opts8'),
-        fungerar:     getSelected('opts_nulage') || null,
-        ovrigt:       document.getElementById('ovrigt').value || null,
+        hjalp_med:    svar.hjalp_med.join(', ') || null,
+        nulage:       svar.nulage || null,
+        varfor_nu:    svar.varfor_nu || null,
+        nar:          svar.nar || null,
+        budget:       svar.budget || null,
+        material:     svar.material.join(', ') || null,
+        vad_ni_gor:   svar.vem_ar_ni || null,
+        skiljer:      svar.skiljer || svar.kommunicera || null,
+        fungerar:     svar.framgang || null,
+        ovrigt:       (svar.provat ? 'Provat tidigare: ' + svar.provat + '\n\n' : '') + (svar.ovrigt || '')  || null,
       };
 
-      const { error } = await client.from('briefs').insert([data]);
+      const { error } = await db.from('briefs').insert([data]);
 
       if (error) {
-        status.textContent = 'Något gick fel, försök igen.';
-        btn.disabled = false;
-        console.error(error);
+        if (status) status.textContent = 'Något gick fel, försök igen.';
+        if (btn) btn.disabled = false;
       } else {
-        goTo(11);
+        pathIndex = getPath().length - 1;
+        render();
       }
     }
 
-    document.addEventListener('keydown', (e) => {
+    // ── Keyboard ──
+    document.addEventListener('keydown', e => {
       if (e.key === 'Enter' && !e.shiftKey && e.target.tagName !== 'TEXTAREA') {
         e.preventDefault();
-        const step = document.querySelectorAll('.step')[current];
-        const btn = step && step.querySelector('.btn-next');
-        if (btn) btn.click();
+        const btn = document.querySelector('.card .btn-next');
+        if (btn && !btn.disabled) btn.click();
       }
     });
 
-    updateUI();
+    // ── Starta ──
+    render();
   </script>
-
 </body>
 </html>
