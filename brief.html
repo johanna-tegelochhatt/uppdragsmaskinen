@@ -24,14 +24,7 @@
       overflow: hidden;
     }
 
-    .progress-bar {
-      position: fixed;
-      top: 0; left: 0;
-      height: 3px;
-      background: var(--purple);
-      transition: width 0.5s ease;
-      z-index: 10;
-    }
+    .progress-bar { display: none; }
 
     .logo {
       position: fixed;
@@ -61,18 +54,15 @@
     }
 
     .step-inner {
-      max-width: 640px;
+      max-width: 680px;
       width: 100%;
+      background: #fff;
+      border-radius: 20px;
+      padding: 52px 56px;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.06);
     }
 
-    .step-number {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--purple);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 24px;
-    }
+    .step-number { display: none; }
 
     .step h2 {
       font-family: 'Cormorant Garamond', serif;
@@ -94,24 +84,24 @@
     .step input,
     .step textarea {
       width: 100%;
-      background: transparent;
+      background: #f7f7f5;
       border: none;
-      border-bottom: 2px solid #ddd;
-      padding: 12px 0;
+      border-radius: 10px;
+      padding: 16px 18px;
       font-family: 'Inter', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 300;
       color: var(--black);
       outline: none;
-      transition: border-color 0.2s;
+      transition: box-shadow 0.2s;
       resize: none;
       line-height: 1.6;
     }
 
     .step input:focus,
-    .step textarea:focus { border-bottom-color: var(--purple); }
+    .step textarea:focus { box-shadow: 0 0 0 2px var(--purple); }
 
-    .step textarea { min-height: 100px; }
+    .step textarea { min-height: 110px; }
 
     /* Radio-knappar */
     .options {
